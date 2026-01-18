@@ -1,85 +1,87 @@
+[English](README.md) | [中文](README_zh.md)
+
 # DotKeeper
 
-这是一个基于 Python 的轻量级 Dotfiles 配置管理工具，旨在帮助用户方便地管理、备份和部署 Linux/Unix 系统下的配置文件。它提供了命令行界面 (CLI) 和 Web 图形界面 (GUI)。
+A lightweight, Python-based Dotfiles configuration management tool designed to help users conveniently manage, backup, and deploy configuration files on Linux/Unix systems. It provides both a command-line interface (CLI) and a web-based graphical user interface (GUI).
 
-## 功能特性
+## Features
 
-* **界面**: 提供高效的 CLI 和直观的 Web GUI (Vue.js)。
-* **部署**: 支持“备份并覆盖”策略，自动将冲突文件备份到 `~/.dotfiles_backup`，防止数据丢失。
-* **撤销**: 支持“撤销 (Undo)”操作。移除软链接时，如果存在备份会自动恢复；如果没有备份，则自动将仓库中的原文件复制回目标位置，确保系统文件完整。
-* **无依赖**: 核心逻辑仅依赖 Python 标准库，无需安装 pip 包即可运行。
+* **Interface**: Provides an efficient CLI and an intuitive Web GUI (Vue.js).
+* **Deployment**: Supports a "Backup and Overwrite" strategy, automatically backing up conflicting files to `~/.dotfiles_backup` to prevent data loss.
+* **Undo**: Supports "Undo" operations. When removing symlinks, it automatically restores backups if they exist; if no backup exists, it copies the original file from the repository back to the target location, ensuring system file integrity.
+* **No Dependencies**: The core logic relies only on the Python standard library, requiring no pip packages to run.
 
-## 安装与运行
+## Installation and Usage
 
-### 前置要求
+### Prerequisites
 
-1. **系统环境**:
-    * Python 3.8 或更高版本。
-    * Linux / macOS 环境 (Windows 下仅限 WSL 或部分支持)。
+1. **System Environment**:
+    * Python 3.8 or higher.
+    * Linux / macOS environment (Windows is limited to WSL or partial support).
 
-2. **准备 Dotfiles 目录 (关键步骤)**:
-    在使用本工具前，用户**必须**将配置文件整理到一个统一的目录中（默认为 `~/.dotfiles`）。
+2. **Prepare Dotfiles Directory (Critical Step)**:
+    Before using this tool, users **must** organize their configuration files into a unified directory (default is `~/.dotfiles`).
 
-    **目录结构规范**:
-    根目录下的一级子目录被视为“包 (Package)”。包内的文件结构应与用户主目录 (`~`) 下的目标结构保持一致。
+    **Directory Structure Standard**:
+    First-level subdirectories under the root directory are treated as "Packages". The file structure within a package should match the target structure under the user's home directory (`~`).
 
-    **结构示例**:
+    **Structure Example**:
 
     ```text
-    /home/user/.dotfiles/      <-- Dotfiles 仓库根目录
-    ├── nvim/                  <-- 包名: nvim
+    /home/user/.dotfiles/      <-- Dotfiles Repository Root
+    ├── nvim/                  <-- Package Name: nvim
     │   └── .config/
     │       └── nvim/
-    │           └── init.vim   <-- 部署后链接至: ~/.config/nvim/init.vim
-    ├── zsh/                   <-- 包名: zsh
-    │   └── .zshrc             <-- 部署后链接至: ~/.zshrc
-    └── git/                   <-- 包名: git
-        └── .gitconfig         <-- 部署后链接至: ~/.gitconfig
+    │           └── init.vim   <-- Linked to: ~/.config/nvim/init.vim after deployment
+    ├── zsh/                   <-- Package Name: zsh
+    │   └── .zshrc             <-- Linked to: ~/.zshrc after deployment
+    └── git/                   <-- Package Name: git
+        └── .gitconfig         <-- Linked to: ~/.gitconfig after deployment
     ```
 
-### 运行方式
+### How to Run
 
-1. **克隆仓库**:
+1. **Clone the Repository**:
 
     ```bash
     git clone https://github.com/ignent/DotKeeper.git && cd DotKeeper
     ```
 
-2. **启动 Web 界面** (默认端口 9012):
+2. **Start Web Interface** (Default port 9012):
 
     ```bash
     python dotkeeper.py web
     ```
 
-    运行后浏览器会自动打开 `http://localhost:9012`。
+    The browser will automatically open `http://localhost:9012` after running.
 
-3. **使用命令行 (CLI)**:
-    * 扫描包状态:
+3. **Use Command Line (CLI)**:
+    * Scan package status:
 
         ```bash
         python dotkeeper.py scan
         ```
 
-    * 部署包 (例如 `zsh`):
+    * Deploy a package (e.g., `zsh`):
 
         ```bash
         python dotkeeper.py deploy zsh
         ```
 
-    * 撤销包 (例如 `zsh`):
+    * Restore a package (e.g., `zsh`):
 
         ```bash
         python dotkeeper.py restore zsh
         ```
 
-    * 查看帮助:
+    * View help:
 
         ```bash
         python dotkeeper.py --help
         ```
 
-## 配置说明
+## Configuration
 
-* **默认 Dotfiles 路径**: `~/.dotfiles` (可通过 `--dotfiles` 参数修改)。
-* **默认目标路径**: 用户主目录 `~` (可通过 `--target` 参数修改)。
-* **备份路径**: `~/.dotfiles_backup` (结构与 dotfiles 仓库一致)。
+* **Default Dotfiles Path**: `~/.dotfiles` (Can be modified via `--dotfiles` argument).
+* **Default Target Path**: User home directory `~` (Can be modified via `--target` argument).
+* **Backup Path**: `~/.dotfiles_backup` (Structure mirrors the dotfiles repository).
