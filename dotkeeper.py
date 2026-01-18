@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 def setup_parser() -> argparse.ArgumentParser:
     """设置并返回命令行参数解析器。"""
-    parser = argparse.ArgumentParser(description="Dotfiles 管理工具")
+    parser = argparse.ArgumentParser(description="DotKeeper - Dotfiles 管理工具")
     
     parser.add_argument("--dotfiles", default="~/.dotfiles", help="Dotfiles 目录路径")
     parser.add_argument("--target", default=None, help="目标根目录 (默认: 用户主目录)")

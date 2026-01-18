@@ -1,4 +1,4 @@
-# Dotfiles 管理工具 (Dotfiles Management Tool)
+# DotKeeper
 
 这是一个基于 Python 的轻量级 Dotfiles 配置管理工具，旨在帮助用户方便地管理、备份和部署 Linux/Unix 系统下的配置文件。它提供了命令行界面 (CLI) 和 Web 图形界面 (GUI)。
 
@@ -42,13 +42,13 @@
 1. **克隆仓库**:
 
     ```bash
-    git clone https://github.com/ignent/PyStow.git && cd PyStow
+    git clone https://github.com/ignent/DotKeeper.git && cd DotKeeper
     ```
 
 2. **启动 Web 界面** (默认端口 9012):
 
     ```bash
-    python pystow.py web
+    python dotkeeper.py web
     ```
 
     运行后浏览器会自动打开 `http://localhost:9012`。
@@ -57,25 +57,25 @@
     * 扫描包状态:
 
         ```bash
-        python pystow.py scan
+        python dotkeeper.py scan
         ```
 
     * 部署包 (例如 `zsh`):
 
         ```bash
-        python pystow.py deploy zsh
+        python dotkeeper.py deploy zsh
         ```
 
     * 撤销包 (例如 `zsh`):
 
         ```bash
-        python pystow.py restore zsh
+        python dotkeeper.py restore zsh
         ```
 
     * 查看帮助:
 
         ```bash
-        python pystow.py --help
+        python dotkeeper.py --help
         ```
 
 ## 配置说明
