@@ -58,6 +58,8 @@ class DotfilesHandler(http.server.SimpleHTTPRequestHandler):
             self.handle_api_restore(data)
         elif parsed.path == '/api/sync':
             self.handle_api_sync()
+        elif parsed.path == '/api/backup-config':
+            self.handle_api_backup_config(data)
         else:
             self.send_error(404, "Not Found")
 
@@ -166,6 +168,26 @@ class DotfilesHandler(http.server.SimpleHTTPRequestHandler):
             logs = Executor.run(plan, dry_run=dry_run)
             
         self.send_json({"status": "success", "logs": logs, "dry_run": dry_run})
+
+    def handle_api_backup_config(self, data):
+        """处理备份 ~/.config 请求。"""
+        dry_run = data.get('dry_run', True)
+
+        plan, backup_path = self.service.backup_config_dir()
+        logs = []
+        if plan.is_empty():
+            logs.append(".config not found or nothing to backup. / 未找到 .config 或无可备份内容。")
+        else:
+            logs = Executor.run(plan, dry_run=dry_run)
+            if not dry_run and backup_path:
+                logs.append(f"Backup created at: {backup_path} / 备份位置: {backup_path}")
+
+        self.send_json({
+            "status": "success",
+            "logs": logs,
+            "dry_run": dry_run,
+            "backup_path": str(backup_path) if backup_path else None
+        })
 
 class ReusableTCPServer(socketserver.TCPServer):
     allow_reuse_address = True

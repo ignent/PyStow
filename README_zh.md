@@ -10,6 +10,7 @@
 * **部署**: 支持“备份并覆盖”策略，自动将冲突文件备份到 `~/.dotfiles_backup`，防止数据丢失。
 * **撤销**: 支持“撤销 (Undo)”操作。移除软链接时，如果存在备份会自动恢复；如果没有备份，则自动将仓库中的原文件复制回目标位置，确保系统文件完整。
 * **无依赖**: 核心逻辑仅依赖 Python 标准库，无需安装 pip 包即可运行。
+* **一键备份**: 支持一键备份用户目录下的 `~/.config` 到 `~/.dotfiles_backup/config/`。
 
 ## 安装与运行
 
@@ -78,6 +79,12 @@
 
         ```bash
         python dotkeeper.py --help
+        ```
+
+    * 一键备份 `~/.config`:
+
+        ```bash
+        python dotkeeper.py backup-config
         ```
 
 ## 配置说明

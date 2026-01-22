@@ -100,10 +100,11 @@ class SymlinkOperation(Operation):
 
 class CopyOperation(Operation):
     """复制/实体化操作。"""
-    def __init__(self, src: Path, dst: Path):
+    def __init__(self, src: Path, dst: Path, preserve_symlinks: bool = False):
         super().__init__(f"Materialize {src} to {dst} / 实体化 {src} 到 {dst}")
         self.src = src
         self.dst = dst
+        self.preserve_symlinks = preserve_symlinks
 
     def dry_run(self) -> str:
         return f"[COPY] Materialize '{self.src}' to '{self.dst}' / 实体化 '{self.src}' 到 '{self.dst}'"
@@ -111,7 +112,7 @@ class CopyOperation(Operation):
     def apply(self) -> None:
         self.dst.parent.mkdir(parents=True, exist_ok=True)
         if self.src.is_dir():
-            shutil.copytree(self.src, self.dst, dirs_exist_ok=True)
+            shutil.copytree(self.src, self.dst, dirs_exist_ok=True, symlinks=self.preserve_symlinks)
         else:
             shutil.copy2(self.src, self.dst)
 

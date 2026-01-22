@@ -1,7 +1,8 @@
 import os
 import shutil
+from datetime import datetime
 from pathlib import Path
-from typing import List
+from typing import List, Optional, Tuple
 import logging
 
 from .config import AppConfig
@@ -111,6 +112,26 @@ class DotfilesService:
     def restore(self, package: Package) -> OperationPlan:
         """恢复（撤销链接）包。"""
         return self.sync(package, action="unlink")
+
+    def backup_config_dir(self) -> Tuple[OperationPlan, Optional[Path]]:
+        """
+        备份用户目录下的 .config 文件夹。
+
+        返回 (操作计划, 备份路径)。如果 .config 不存在，操作计划为空且路径为 None。
+        """
+        plan = OperationPlan()
+
+        source_config = self.config.target_root / ".config"
+        if not source_config.exists():
+            logger.warning(".config directory does not exist under target root %s", self.config.target_root)
+            return plan, None
+
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        backup_root = self.config.target_root / ".dotfiles_backup" / "config"
+        backup_path = backup_root / f"config-{timestamp}"
+
+        plan.add(CopyOperation(source_config, backup_path, preserve_symlinks=True))
+        return plan, backup_path
 
     def sync(self, package: Package, action: str = "link", conflict_strategy: str = "backup") -> OperationPlan:
         """

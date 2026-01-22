@@ -249,6 +249,7 @@
             </div>
             <div style="padding: 10px;">
                 <button class="btn-refresh" style="width: 100%" @click="fetchPackages">{{ t('refresh') }}</button>
+                <button class="btn-refresh" style="width: 100%; margin-top: 10px" @click="backupConfig">{{ t('backup_config') }}</button>
             </div>
         </div>
         
@@ -346,7 +347,8 @@
                 state_linked: "Linked",
                 state_conflict: "Conflict",
                 state_missing: "Missing",
-                state_orphan: "Orphan"
+                state_orphan: "Orphan",
+                backup_config: "Backup ~/.config"
             },
             zh: {
                 title: "DotKeeper",
@@ -374,7 +376,8 @@
                 state_linked: "已链接",
                 state_conflict: "冲突",
                 state_missing: "缺失",
-                state_orphan: "孤立"
+                state_orphan: "孤立",
+                backup_config: "一键备份 ~/.config"
             }
         }
 
@@ -476,6 +479,36 @@
                     }
                 }
 
+                const backupConfig = async () => {
+                    let logMsg = messages[lang.value].executing
+                        .replace('{action}', t('backup_config'))
+                        .replace('{pkg}', '~/.config')
+                        .replace('{dry}', dryRun.value)
+
+                    logs.value = [logMsg]
+
+                    const payload = {
+                        dry_run: dryRun.value
+                    }
+
+                    try {
+                        const res = await fetch(`/api/backup-config`, {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify(payload)
+                        })
+                        const data = await res.json()
+                        if (data.status === 'success') {
+                            logs.value = [...logs.value, ...data.logs]
+                            if (data.logs.length === 0) logs.value.push(t('no_ops'))
+                        } else {
+                            logs.value.push(`${t('error')}: ${data.message}`)
+                        }
+                    } catch (e) {
+                        logs.value.push(`${t('request_failed')}: ${e}`)
+                    }
+                }
+
                 const showDiff = async (file) => {
                     diffTargetName.value = file.rel_path
                     isDiffOpen.value = true
@@ -518,6 +551,7 @@
                     restoreStrategy,
                     selectPackage,
                     runAction,
+                    backupConfig,
                     fetchPackages,
                     formatState,
                     

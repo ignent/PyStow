@@ -10,6 +10,7 @@ A lightweight, Python-based Dotfiles configuration management tool designed to h
 * **Deployment**: Supports a "Backup and Overwrite" strategy, automatically backing up conflicting files to `~/.dotfiles_backup` to prevent data loss.
 * **Undo**: Supports "Undo" operations. When removing symlinks, it automatically restores backups if they exist; if no backup exists, it copies the original file from the repository back to the target location, ensuring system file integrity.
 * **No Dependencies**: The core logic relies only on the Python standard library, requiring no pip packages to run.
+* **One-click Backup**: Supports backing up the user's `~/.config` directory to `~/.dotfiles_backup/config/`.
 
 ## Installation and Usage
 
@@ -78,6 +79,12 @@ A lightweight, Python-based Dotfiles configuration management tool designed to h
 
         ```bash
         python dotkeeper.py --help
+        ```
+
+    * One-click backup `~/.config`:
+
+        ```bash
+        python dotkeeper.py backup-config
         ```
 
 ## Configuration
